@@ -1,0 +1,28 @@
+<%- include('../partials/head', {pageTitle: 'Airbnb Home'}) %>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+
+
+    <!-- Welcome Section -->
+    <div class="p-6 flex items-center justify-center flex-col">
+        <h1 class="font-bold text-4xl text-red-800">Showing Registered Homes:</h1>
+        <ul class="mt-16 space-y-6 gap-4 items-center justify-center flex flex-col">
+            <% properties.forEach(function(property) { %>
+                <li class="border rounded shadow mb-2 w-1/2  border-gray-300 pb-2">
+                    <img class="rounded object-cover" src="<%= property.image %>" alt="Property Image">
+                    <div class="flex items-center justify-between mt-2">
+                        <div>
+                            <h2 class="font-semibold text-xl pl-2"><%= property.title %></h2>
+                            <p class="text-gray-500 pl-2"><%= property.location %></p>
+                            <p class="text-red-500 font-bold pl-2">$<%= property.price%>/night</p></div>
+                        <div class="mr-2 mt-10">
+                            <button class="bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600 ml-2 ">Book Now</button>
+                        </div> 
+                    </div>   
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</body>
+</html>
