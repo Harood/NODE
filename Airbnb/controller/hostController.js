@@ -5,6 +5,16 @@ exports.getAddProperty = (req, res, next) => {
     res.render('host/add-property', { pageTitle: 'Add Property' });
 }
 
+exports.getHostProperties = (req, res, next) => {
+    const properties = Property.fetchAll( (registeredproperty) => {
+        res.render('host/hostHome-list', { 
+            pageTitle: 'Host Homes List', 
+            properties: registeredproperty 
+        });
+    }
+        );
+    
+}
 
 exports.postAddProperty =  (req, res, next) => {
     console.log('Property Registered:', req.body);

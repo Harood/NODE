@@ -13,5 +13,19 @@ exports.getAllProperties = (req, res, next) => {
 }
 
 exports.getAllBookings = (req, res, next) => {
-    res.render('store/bookings', { pageTitle: 'My Bookings' });
+    Property.fetchAll((registeredproperty) => {
+        res.render('store/bookings', { 
+            pageTitle: 'My Bookings',
+            properties: registeredproperty 
+        });
+    });
 }   
+
+exports.getFavoriteProperties = (req, res, next) => {
+    Property.fetchAll((registeredproperty) => {
+        res.render('store/favourite-list', {
+            pageTitle: 'My Favourites',
+            properties: registeredproperty
+        });
+    });
+}

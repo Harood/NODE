@@ -12,5 +12,6 @@ const storeRouter = express.Router();
 
 storeRouter.get('/', homesController.getAllProperties); 
 storeRouter.get('/bookings', homesController.getAllBookings);
+storeRouter.get('/favourite-list', homesController.getFavoriteProperties);
 
 module.exports = storeRouter;
