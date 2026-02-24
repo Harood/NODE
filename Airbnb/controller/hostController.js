@@ -22,7 +22,6 @@ exports.postAddProperty =  (req, res, next) => {
     const newProperty = new Property(title, location, price, image);
     newProperty.save();
 
-    console.log('All Registered Properties:', Property.fetchAll());
     res.render('host/propertyadded', { pageTitle: 'Property Added Successfully' });
 }
 

@@ -12,6 +12,7 @@ module.exports = class Property {
     }
 
     save() {
+        this.id = Math.random().toString(36);
         Property.fetchAll( (registeredproperty) => {
             registeredproperty.push(this);
             const propertiesFilePath = path.join(rootDir, 'data', 'properties.json');
@@ -29,7 +30,11 @@ module.exports = class Property {
         const propertiesFilePath = path.join(rootDir, 'data', 'properties.json');
         fs.readFile(propertiesFilePath, (err, data) => {
             console.log('Reading properties from file...');
-            callback(!err ? JSON.parse(data) : []);
+            if (err || !data || data.length === 0) {
+                callback([]);
+            } else {
+                callback(JSON.parse(data));
+            }
         });
     }
 }

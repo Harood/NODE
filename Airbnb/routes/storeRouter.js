@@ -13,5 +13,6 @@ const storeRouter = express.Router();
 storeRouter.get('/', homesController.getAllProperties); 
 storeRouter.get('/bookings', homesController.getAllBookings);
 storeRouter.get('/favourite-list', homesController.getFavoriteProperties);
+storeRouter.get('/homes/:propertyId', homesController.getPropertyDetails);
 
 module.exports = storeRouter;

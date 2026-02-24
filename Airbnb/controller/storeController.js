@@ -29,3 +29,20 @@ exports.getFavoriteProperties = (req, res, next) => {
         });
     });
 }
+
+exports.getPropertyDetails = (req, res, next) => {
+    const propertyId = req.params.propertyId;
+    Property.fetchAll( (registeredproperty) => {
+        const property = registeredproperty.find(p => p.id.toString() === propertyId);
+        if (property) {
+            res.render('store/home-detail', { 
+                pageTitle: 'Property Details', 
+                property: property 
+            });
+        } else {
+            res.status(404).render('error', { pageTitle: 'Property Not Found' });
+        }
+    }
+        );
+    
+}
