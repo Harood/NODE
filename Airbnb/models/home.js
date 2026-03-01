@@ -3,6 +3,8 @@ const path = require('path');
 const rootDir = require('../utils/pathutils');
 
 
+const propertiesFilePath = path.join(rootDir, 'data', 'properties.json');
+
 module.exports = class Property {
     constructor(title, location, price, image) {
         this.title = title; 
@@ -15,7 +17,6 @@ module.exports = class Property {
         this.id = Math.random().toString(36);
         Property.fetchAll( (registeredproperty) => {
             registeredproperty.push(this);
-            const propertiesFilePath = path.join(rootDir, 'data', 'properties.json');
             fs.writeFile(propertiesFilePath, JSON.stringify(registeredproperty), (err) => {
             if (err) {
                 console.error('Error saving property:', err);
@@ -35,6 +36,12 @@ module.exports = class Property {
             } else {
                 callback(JSON.parse(data));
             }
+        });
+    }
+    static findById(id, callback) {
+        Property.fetchAll((properties) => {
+            const propertyFound = properties.find(p => p.id.toString() === id);
+            callback(propertyFound);
         });
     }
 }
