@@ -2,103 +2,20 @@
 </head>
 <body>
     <%- include('../partials/nav') %>
-
-    <main class="min-h-screen bg-gray-50 py-10">
-        <section class="max-w-5xl mx-auto px-4">
-            <header class="mb-8 text-center">
-                <p class="text-sm font-semibold tracking-wide text-red-500 uppercase">Home details</p>
-                <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">
-                    <%= property.title %>
-                </h1>
-                <p class="mt-1 text-gray-500">
-                    <%= property.location %>
-                </p>
-            </header>
-
-            <div class="bg-white shadow-xl rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-0">
-                <!-- Image -->
-                <div class="relative h-72 md:h-full">
-                    <img
-                        class="h-full w-full object-cover"
-                        src="<%= property.image %>"
-                        alt="Photo of <%= property.title %>"
-                    >
-                    <div class="absolute top-4 left-4 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
-                        $<%= property.price %> / night
-                    </div>
-                </div>
-
-                <!-- Details -->
-                <div class="p-6 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h2 class="text-2xl font-semibold text-gray-900">
-                                    <%= property.title %>
-                                </h2>
-                                <p class="mt-1 text-sm text-gray-500">
-                                    <%= property.location %>
-                                </p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-2xl font-bold text-red-500">
-                                    $<%= property.price %>
-                                </p>
-                                <p class="text-xs text-gray-500">per night</p>
-                            </div>
-                        </div>
-
-                        <hr class="my-5 border-gray-100">
-
-                        <div class="space-y-3 text-sm text-gray-600">
-                            <p>
-                                Enjoy a comfortable stay in this carefully curated home. Perfect for short getaways,
-                                business trips, or extended stays. Clean, bright, and located in a convenient area.
-                            </p>
-                            <ul class="grid grid-cols-2 gap-2 text-xs md:text-sm">
-                                <li class="flex items-center gap-2">
-                                    <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                                    Free Wi‑Fi
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                                    Self check‑in
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                                    Flexible cancellation
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                                    Great location
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-                        <div class="text-xs text-gray-500">
-                            You’re viewing details for listing
-                            <span class="font-semibold text-gray-700">#<%= property.id %></span>
-                        </div>
-                        <div class="flex gap-3 justify-end">
-                            <a
-                                href="/"
-                                class="inline-flex items-center justify-center rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                            >
-                                Back to all homes
-                            </a>
-                            <%- include('../partials/favourite', { property: property }) %>
-                            <button
-                                class="inline-flex items-center justify-center rounded-full bg-red-500 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1"
-                            >
-                                Book now
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+    <!-- Welcome Section -->
+    <p class="text-red-500 text-center text-2xl font-bold">Here is Home detail</p>
+    <div class="flex items-center justify-center">
+        <img class="rounded object-cover" src="<%= property.image %>" alt="Property Image">
+                    <div class="flex items-center justify-between mt-2">
+                        <div>
+                            <h2 class="font-semibold text-xl pl-2"><%= property.title %></h2>
+                            <p class="text-gray-500 pl-2"><%= property.location %></p>
+                            <p class="text-red-500 font-bold pl-2">$<%= property.price%>/night</p></div>
+                        <div class="mr-2 mt-10">
+                            <a href="/homes/<%= property.id %>" class="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600">Details</a>
+                            <button class="bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600 ml-2 ">Book Now</button>
+                        </div> 
+                    </div>   
+    </div>
 </body>
 </html>

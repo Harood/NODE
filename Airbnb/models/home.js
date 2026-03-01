@@ -14,9 +14,25 @@ module.exports = class Property {
     }
 
     save() {
-        this.id = Math.random().toString(36);
+       
         Property.fetchAll( (registeredproperty) => {
-            registeredproperty.push(this);
+            if (this.id) {
+                let updated = false;
+                registeredproperty = registeredproperty.map(p => {
+                    if (p.id && p.id.toString() === this.id.toString()) {
+                        updated = true;
+                        return this;
+                    }
+                    return p;
+                });
+
+                if (!updated) {
+                    registeredproperty.push(this);
+                }
+            } else {
+                this.id = Math.random().toString(36);
+                registeredproperty.push(this);
+            }
             fs.writeFile(propertiesFilePath, JSON.stringify(registeredproperty), (err) => {
             if (err) {
                 console.error('Error saving property:', err);
