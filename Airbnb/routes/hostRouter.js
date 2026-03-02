@@ -4,6 +4,7 @@ const hostRouter = express.Router();
 
 // Models
 const Property = require('../models/home');
+const hostController = require('../controller/hostController');
 
 // Add property (GET)
 hostRouter.get('/host/add-property', (req, res) => {
@@ -63,5 +64,7 @@ hostRouter.post('/host/edit-property/:id', (req, res) => {
         res.redirect('/host/hostHome-list');
     });
 });
+
+hostRouter.post('/host/delete-property/:id', hostController.deleteProperty);
 
 module.exports = { hostRouter };

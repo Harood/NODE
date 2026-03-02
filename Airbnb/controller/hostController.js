@@ -52,3 +52,16 @@ exports.postEditProperty = (req, res, next) => {
         res.redirect('/host/hostHome-list');
     });
 };
+
+exports.deleteProperty = (req, res, next) => {
+    const propertyId = req.params.id;
+
+        Property.deleteById(propertyId, (err) => {
+            if (err) {
+                console.error('Error deleting property:', err);
+                return res.status(500).render('404', { pageTitle: 'Page Not Found' });
+            }
+
+            res.redirect('/host/hostHome-list');
+        });
+};

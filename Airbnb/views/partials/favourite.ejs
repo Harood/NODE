@@ -1,4 +1,12 @@
-<form action="/favourite-list">
+<form action="/favourite-list" method="POST" class="inline">
     <input type="hidden" name="propertyId" value="<%= property.id %>">
-    <button type="submit" class="bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600">Add to Favourites</button>
+    <button type="submit" class="bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600">
+        Add to favourites
+    </button>
+</form>
+
+<form action="/favourite-list/<%= property.id %>" method="POST" class="inline ml-2">
+    <button type="submit" class="bg-gray-500 text-white py-1 px-4 rounded hover:bg-gray-600">
+        Remove
+    </button>
 </form>

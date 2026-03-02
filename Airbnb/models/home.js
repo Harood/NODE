@@ -60,4 +60,9 @@ module.exports = class Property {
             callback(propertyFound);
         });
     }
+    static deleteById(id, callback) {
+        this.fetchAll((properties) => { properties = properties.filter(p => p.id.toString() !== id);
+            fs.writeFile(propertiesFilePath, JSON.stringify(properties), callback) ;
+        });
+    }
 }
