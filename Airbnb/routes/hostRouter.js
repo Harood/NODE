@@ -13,8 +13,8 @@ hostRouter.get('/host/add-property', (req, res) => {
 
 // Add property (POST)
 hostRouter.post('/host/add-property', (req, res) => {
-    const { title, location, price, image } = req.body;
-    const newProperty = new Property(title, location, price, image);
+    const { houseName, location, price, image, rating, description } = req.body;
+    const newProperty = new Property(houseName, location, price, image, rating, description);
     newProperty.save();
 
     res.render('host/propertyadded', { pageTitle: 'Property Added Successfully' });
@@ -22,7 +22,7 @@ hostRouter.post('/host/add-property', (req, res) => {
 
 // List all host properties
 hostRouter.get('/host/hostHome-list', (req, res) => {
-    Property.fetchAll((registeredproperty) => {
+    Property.fetchAll().then(([registeredproperty]) => {
         res.render('host/hostHome-list', { 
             pageTitle: 'Host Homes List', 
             properties: registeredproperty 
@@ -35,7 +35,7 @@ hostRouter.get('/host/edit-property/:id', (req, res) => {
     const propertyId = req.params.id;
     const edit = req.query.edit === 'true';
 
-    Property.findById(propertyId, (property) => {
+    Property.findById(propertyId).then(([[property]]) => {
         if (!property) {
             return res.status(404).render('404', { pageTitle: 'Page Not Found' });
         }
@@ -50,18 +50,14 @@ hostRouter.get('/host/edit-property/:id', (req, res) => {
 // Edit property (POST)
 hostRouter.post('/host/edit-property/:id', (req, res) => {
     const propertyId = req.params.id;
-    const { id, title, location, price, image } = req.body;
+    const { houseName, location, price, image, rating, description } = req.body;
 
-    Property.findById(propertyId, (property) => {
-        if (!property) {
-            return res.status(404).render('404', { pageTitle: 'Page Not Found' });
-        }
-
-        const updatedProperty = new Property(title, location, price, image);
-        updatedProperty.id = id || propertyId;
-        updatedProperty.save();
-
+    const updatedProperty = new Property(houseName, location, price, image, rating, description);
+    updatedProperty.id = propertyId;
+    updatedProperty.save().then(() => {
         res.redirect('/host/hostHome-list');
+    }).catch(() => {
+        res.status(500).render('404', { pageTitle: 'Error updating property' });
     });
 });
 

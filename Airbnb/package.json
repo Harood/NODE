@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
-    "tailwind": "tailwindcss -i ./views/input.css -o ./public/output.css --watch"
+    "start": "concurrently \"npx nodemon app.js\" \"npx tailwindcss -i ./views/input.css -o ./public/output.css --watch\"",
+    "dev:server": "npx nodemon app.js",
+    "dev:css": "npx tailwindcss -i ./views/input.css -o ./public/output.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -17,10 +18,14 @@
     "@tailwindcss/postcss": "^4.1.18",
     "body-parser": "^2.2.2",
     "ejs": "^4.0.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongodb": "^7.1.0",
+    "mysql2": "^3.19.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.23",
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.14",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18"
   }

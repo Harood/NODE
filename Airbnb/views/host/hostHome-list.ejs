@@ -13,9 +13,10 @@
                     <img class="rounded object-cover" src="<%= property.image %>" alt="Property Image">
                     <div class="flex items-center justify-between mt-2">
                         <div>
-                            <h2 class="font-semibold text-xl pl-2"><%= property.title %></h2>
+                            <h2 class="font-semibold text-xl pl-2"><%= property.houseName %></h2>
                             <p class="text-gray-500 pl-2"><%= property.location %></p>
-                            <p class="text-red-500 font-bold pl-2">$<%= property.price%>/night</p></div>
+                            <p class="text-red-500 font-bold pl-2">$<%= property.price%>/night</p>
+                            <p class="text-yellow-500 font-semibold pl-2">⭐ <%= property.rating || 'N/A' %></p></div>
                         <div class="mr-2 mt-10">
                             <a href="/host/edit-property/<%= property.id %>?edit=true" class="bg-green-500 text-white py-1 px-4 rounded hover:bg-gray-600">Edit</a>
                            <form action="/host/delete-property/<%= property.id %>" method="POST">

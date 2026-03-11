@@ -1,68 +1,40 @@
-const fs = require('fs');
-const path = require('path');
-const rootDir = require('../utils/pathutils');
-
-
-const propertiesFilePath = path.join(rootDir, 'data', 'properties.json');
+const db = require('../utils/databaseutil');
 
 module.exports = class Property {
-    constructor(title, location, price, image) {
-        this.title = title; 
+    constructor(houseName, location, price, image, rating, description, id) {
+        this.houseName = houseName; 
         this.location = location;
         this.price = price;
         this.image = image;
+        this.rating = rating;
+        this.description = description;
+        this.id = id;
     }
 
     save() {
+        if (this.id) {
+            return db.execute(
+                'UPDATE homes SET houseName = ?, location = ?, price = ?, image = ?, rating = ?, description = ? WHERE id = ?',
+                [this.houseName, this.location, this.price, this.image, this.rating, this.description, this.id]
+            );
+        } else {
+            return db.execute(
+                'INSERT INTO homes (houseName, location, price, image, rating, description) VALUES (?, ?, ?, ?, ?, ?)',
+                [this.houseName, this.location, this.price, this.image, this.rating, this.description]
+            );
+        }
        
-        Property.fetchAll( (registeredproperty) => {
-            if (this.id) {
-                let updated = false;
-                registeredproperty = registeredproperty.map(p => {
-                    if (p.id && p.id.toString() === this.id.toString()) {
-                        updated = true;
-                        return this;
-                    }
-                    return p;
-                });
-
-                if (!updated) {
-                    registeredproperty.push(this);
-                }
-            } else {
-                this.id = Math.random().toString(36);
-                registeredproperty.push(this);
-            }
-            fs.writeFile(propertiesFilePath, JSON.stringify(registeredproperty), (err) => {
-            if (err) {
-                console.error('Error saving property:', err);
-            } else {
-                console.log('Property saved successfully!');
-            }
-        });
-        });
     }
 
     static fetchAll(callback) {
-        const propertiesFilePath = path.join(rootDir, 'data', 'properties.json');
-        fs.readFile(propertiesFilePath, (err, data) => {
-            console.log('Reading properties from file...');
-            if (err || !data || data.length === 0) {
-                callback([]);
-            } else {
-                callback(JSON.parse(data));
-            }
-        });
+        return db.execute('SELECT * FROM homes');
     }
     static findById(id, callback) {
-        Property.fetchAll((properties) => {
-            const propertyFound = properties.find(p => p.id.toString() === id);
-            callback(propertyFound);
-        });
+        return db.execute('SELECT * FROM homes WHERE id = ?', [id]);
+        
     }
     static deleteById(id, callback) {
-        this.fetchAll((properties) => { properties = properties.filter(p => p.id.toString() !== id);
-            fs.writeFile(propertiesFilePath, JSON.stringify(properties), callback) ;
-        });
+        return db.execute('DELETE FROM homes WHERE id = ?', [id]);
+        
     }
 }
