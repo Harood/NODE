@@ -3,8 +3,8 @@
 <body class="bg-gray-100">
     <%- include('../partials/nav') %>
     <h1 class="text-3xl font-bold text-center text-red-800 mb-6 pt-2"><%= edit ? 'Edit Property' : 'Add Property' %></h1>
-    <form action="/host/<%= edit ? 'edit-property/' + property.id : 'add-property' %>" method="POST" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md space-y-4">
-        <input type="hidden" name="id" value="<%=edit ? property.id : ''%>"/>
+    <form action="/host/<%= edit ? 'edit-property/' + property._id : 'add-property' %>" method="POST" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md space-y-4">
+        <input type="hidden" name="id" value="<%=edit ? property._id : ''%>"/>
         <input type="text" name="houseName" placeholder="Property Name" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500" value="<%=edit ? property.houseName : ''%>"/>
         <input type="text" name="location" placeholder="Location" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500" value="<%=edit ? property.location : ''%>"/>
         <input type="number" name="price" placeholder="Price per night" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500" value="<%=edit ? property.price : ''%>"/>

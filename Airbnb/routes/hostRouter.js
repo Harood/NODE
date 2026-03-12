@@ -22,10 +22,10 @@ hostRouter.post('/host/add-property', (req, res) => {
 
 // List all host properties
 hostRouter.get('/host/hostHome-list', (req, res) => {
-    Property.fetchAll().then(([registeredproperty]) => {
+    Property.fetchAll().then(properties => {
         res.render('host/hostHome-list', { 
             pageTitle: 'Host Homes List', 
-            properties: registeredproperty 
+            properties: properties 
         });
     });
 });
@@ -35,7 +35,7 @@ hostRouter.get('/host/edit-property/:id', (req, res) => {
     const propertyId = req.params.id;
     const edit = req.query.edit === 'true';
 
-    Property.findById(propertyId).then(([[property]]) => {
+    Property.findById(propertyId).then(property => {
         if (!property) {
             return res.status(404).render('404', { pageTitle: 'Page Not Found' });
         }
@@ -48,18 +48,7 @@ hostRouter.get('/host/edit-property/:id', (req, res) => {
 });
 
 // Edit property (POST)
-hostRouter.post('/host/edit-property/:id', (req, res) => {
-    const propertyId = req.params.id;
-    const { houseName, location, price, image, rating, description } = req.body;
-
-    const updatedProperty = new Property(houseName, location, price, image, rating, description);
-    updatedProperty.id = propertyId;
-    updatedProperty.save().then(() => {
-        res.redirect('/host/hostHome-list');
-    }).catch(() => {
-        res.status(500).render('404', { pageTitle: 'Error updating property' });
-    });
-});
+hostRouter.post('/host/edit-property/:id', hostController.postEditProperty);
 
 hostRouter.post('/host/delete-property/:id', hostController.deleteProperty);
 

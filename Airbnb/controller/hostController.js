@@ -6,7 +6,7 @@ exports.getAddProperty = (req, res, next) => {
 }
 
 exports.getHostProperties = (req, res, next) => {
-    const properties = Property.fetchAll().then( ([registeredproperty]) => {
+    const properties = Property.fetchAll().then(registeredproperty => {
         res.render('host/hostHome-list', { 
             pageTitle: 'Host Homes List', 
             properties: registeredproperty 
@@ -20,16 +20,20 @@ exports.postAddProperty =  (req, res, next) => {
     console.log('Property Registered:', req.body);
     const { houseName, location, price, image, rating, description } = req.body;
     const newProperty = new Property(houseName, location, price, image, rating, description);
-    newProperty.save();
-
-    res.render('host/propertyadded', { pageTitle: 'Property Added Successfully' });
+    newProperty.save().then(() => {
+        console.log('Property saved to database');
+        res.render('host/propertyadded', { pageTitle: 'Property Added Successfully' });
+    }).catch((err) => {
+        console.error('Error saving property:', err);
+        res.status(500).render('404', { pageTitle: 'Error adding property' });
+    });
 }
 
 exports.getEditProperty = (req, res, next) => {
     const propertyId = req.params.id;
     const edit = req.query.edit === 'true';
 
-    Property.findById(propertyId).then(([property]) => {
+    Property.findById(propertyId).then(property=> {
         if (!property) {
             return res.status(404).render('404', { pageTitle: 'Page Not Found' });
         }
@@ -38,32 +42,33 @@ exports.getEditProperty = (req, res, next) => {
 };
 exports.postEditProperty = (req, res, next) => {
     const propertyId = req.params.id;
-    const { id, houseName, location, price, image, rating, description } = req.body;
-    Property.findById(propertyId).then(([property]) => {
+    const { houseName, location, price, image, rating, description } = req.body;
+    Property.findById(propertyId).then(property => {
         if (!property) {
             return res.status(404).render('404', { pageTitle: 'Page Not Found' });
         }
-        property.id = id;
-        property.houseName = houseName  ;
+        property.houseName = houseName;
         property.location = location;
         property.price = price;
         property.image = image;
         property.rating = rating;
         property.description = description;
-        property.save();
+        return property.save();
+    }).then(() => {
         res.redirect('/host/hostHome-list');
+    }).catch((err) => {
+        console.error('Error updating property:', err);
+        res.status(500).render('404', { pageTitle: 'Error updating property' });
     });
 };
 
 exports.deleteProperty = (req, res, next) => {
     const propertyId = req.params.id;
 
-        Property.deleteById(propertyId, (err) => {
-            if (err) {
-                console.error('Error deleting property:', err);
-                return res.status(500).render('404', { pageTitle: 'Page Not Found' });
-            }
-
-            res.redirect('/host/hostHome-list');
-        });
+    Property.deleteById(propertyId).then(() => {
+        res.redirect('/host/hostHome-list');
+    }).catch((err) => {
+        console.error('Error deleting property:', err);
+        res.status(500).render('404', { pageTitle: 'Error deleting property' });
+    });
 };

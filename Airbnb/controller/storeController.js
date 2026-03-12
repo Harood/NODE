@@ -2,7 +2,7 @@ const Property = require('../models/home');
 const Favourite = require('../models/favourite');
 
 exports.getAllProperties = (req, res, next) => {
-    const properties = Property.fetchAll().then(([registeredproperty]) => {
+    const properties = Property.fetchAll().then(registeredproperty => {
         res.render('store/home-list', {
             pageTitle: 'All Properties',
             properties: registeredproperty
@@ -11,7 +11,7 @@ exports.getAllProperties = (req, res, next) => {
 };
 
 exports.getAllBookings = (req, res, next) => {
-    Property.fetchAll().then(([registeredproperty]) => {
+    Property.fetchAll().then(registeredproperty => {
         res.render('store/bookings', { 
             pageTitle: 'My Bookings',
             properties: registeredproperty 
@@ -21,9 +21,9 @@ exports.getAllBookings = (req, res, next) => {
 
 exports.getFavoriteProperties = (req, res, next) => {
     Favourite.getAll((favouriteIds) => {
-        Property.fetchAll().then(([registeredproperty]) => {
+        Property.fetchAll().then(registeredproperty => {
             const favouriteProps = registeredproperty.filter((p) =>
-                favouriteIds.includes(p.id.toString())
+                favouriteIds.includes(p._id.toString())
             );
 
             res.render('store/favourite-list', {
@@ -41,8 +41,7 @@ exports.postaddFavoriteProperty = (req, res, next) => {
         return res.redirect('/');
     }
 
-    Property.findById(propertyId).then(([property]) => {
-        const foundProperty = property[0];
+    Property.findById(propertyId).then(property => {
         if (!property) {
             return res.status(404).render('404', { pageTitle: 'Page Not Found' });
         }
@@ -56,13 +55,13 @@ exports.postaddFavoriteProperty = (req, res, next) => {
 exports.getPropertyDetails = (req, res, next) => {
     const propertyId = req.params.propertyId;
 
-    Property.findById(propertyId).then(([rows]) => {
-        if (!rows || rows.length === 0) {
+    Property.findById(propertyId).then(property => {
+        if (!property) {
             return res.status(404).render('404', { pageTitle: 'Page Not Found' });
         }
         res.render('store/home-detail', {
             pageTitle: 'Property Details',
-            property: rows[0]
+            property: property
         });
     });
 };
