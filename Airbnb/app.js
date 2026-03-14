@@ -4,7 +4,7 @@ const storeRouter = require('./routes/storeRouter');
 const {hostRouter} = require('./routes/hostRouter');
 const rootDir = require('./utils/pathutils');
 const errorController = require('./controller/error');
-const MongoConnect = require('./utils/databaseutil');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -22,8 +22,10 @@ app.use(errorController.get404);
 
 
 const PORT = 3000;
-MongoConnect(() => {
+mongoose.connect('mongodb+srv://harismasood012:admin123@hariscluster.0xiex7v.mongodb.net/airbnb?appName=HarisCluster').then(() => {
   app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+}).catch((err) => {
+  console.log("Error connecting to MongoDB:", err);
 });

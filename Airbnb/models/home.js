@@ -37,7 +37,24 @@ module.exports = class Property {
     }
     static findById(id) {
         const db = getDb();
-        return db.collection('homes').find({ _id: new ObjectId(String(id)) }).next();
+        return db.collection('homes')
+            .find({ _id: new ObjectId(String(id)) })
+            .next()
+            .then((property) => {
+                if (!property) {
+                    return null;
+                }
+
+                return new Property(
+                    property.houseName,
+                    property.location,
+                    property.price,
+                    property.image,
+                    property.rating,
+                    property.description,
+                    property._id
+                );
+            });
     }
     static deleteById(id) {
         const db = getDb();
