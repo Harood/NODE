@@ -1,8 +1,8 @@
-const Property = require('../models/home');
+const Property = require('../models/property');
 const Favourite = require('../models/favourite');
 
 exports.getAllProperties = (req, res, next) => {
-    const properties = Property.fetchAll().then(registeredproperty => {
+    const properties = Property.find().then(registeredproperty => {
         res.render('store/home-list', {
             pageTitle: 'All Properties',
             properties: registeredproperty
@@ -11,7 +11,7 @@ exports.getAllProperties = (req, res, next) => {
 };
 
 exports.getAllBookings = (req, res, next) => {
-    Property.fetchAll().then(registeredproperty => {
+    Property.find().then(registeredproperty => {
         res.render('store/bookings', { 
             pageTitle: 'My Bookings',
             properties: registeredproperty 
@@ -20,30 +20,23 @@ exports.getAllBookings = (req, res, next) => {
 };  
 
 exports.getFavoriteProperties = (req, res, next) => {
-    Promise.all([Favourite.getAll(), Property.fetchAll()])
-        .then(([favourites, registeredproperty]) => {
-            const favouriteIds = favourites.map((fav) => String(fav.propertyId));
-            const favouriteProps = registeredproperty.filter((p) =>
-                favouriteIds.includes(String(p._id))
-            );
-
-            res.render('store/favourite-list', {
-                pageTitle: 'My Favourites',
-                properties: favouriteProps
-            });
-        })
-        .catch((err) => {
-            console.error('Error loading favourites:', err);
-            res.status(500).render('404', { pageTitle: 'Page Not Found' });
+    Favourite.find().populate('propertyId').then(favorites => {
+        const favoriteProperties = favorites.map(fav => fav.propertyId);
+        res.render('store/favourite-list', { 
+            pageTitle: 'My Favourites', 
+            properties: favoriteProperties 
         });
+    });
 };
 
 exports.postaddFavoriteProperty = (req, res, next) => {
     const propertyId = req.body.propertyId;
-    const favourite = new Favourite(propertyId);
-    favourite.save()
+    Favourite.findOneAndUpdate(
+        { propertyId },
+        { propertyId },
+        { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
+    )
         .then(() => {
-            console.log('Property added to favourites');
             res.redirect('/favourite-list');
         })
         .catch((err) => {
@@ -69,7 +62,7 @@ exports.getPropertyDetails = (req, res, next) => {
 exports.deleteFavoriteProperty = (req, res, next) => {
     const propertyId = req.params.propertyId;
 
-    Favourite.remove(propertyId)
+    Favourite.deleteOne({ propertyId })
         .then(() => {
             res.redirect('/favourite-list');
         })
