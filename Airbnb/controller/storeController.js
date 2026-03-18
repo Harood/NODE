@@ -5,7 +5,8 @@ exports.getAllProperties = (req, res, next) => {
     const properties = Property.find().then(registeredproperty => {
         res.render('store/home-list', {
             pageTitle: 'All Properties',
-            properties: registeredproperty
+            properties: registeredproperty,
+            isloggedin: req.isloggedin
         });
     });
 };
@@ -14,7 +15,8 @@ exports.getAllBookings = (req, res, next) => {
     Property.find().then(registeredproperty => {
         res.render('store/bookings', { 
             pageTitle: 'My Bookings',
-            properties: registeredproperty 
+            properties: registeredproperty,
+            isloggedin: req.isloggedin
         });
     });
 };  
@@ -24,7 +26,8 @@ exports.getFavoriteProperties = (req, res, next) => {
         const favoriteProperties = favorites.map(fav => fav.propertyId);
         res.render('store/favourite-list', { 
             pageTitle: 'My Favourites', 
-            properties: favoriteProperties 
+            properties: favoriteProperties,
+            isloggedin: req.isloggedin
         });
     });
 };
@@ -41,7 +44,7 @@ exports.postaddFavoriteProperty = (req, res, next) => {
         })
         .catch((err) => {
             console.error('Error adding to favourites:', err);
-            res.status(500).render('404', { pageTitle: 'Page Not Found' });
+            res.status(500).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin });
         });
 };
 
@@ -50,11 +53,12 @@ exports.getPropertyDetails = (req, res, next) => {
 
     Property.findById(propertyId).then(property => {
         if (!property) {
-            return res.status(404).render('404', { pageTitle: 'Page Not Found' });
+            return res.status(404).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin });
         }
         res.render('store/home-detail', {
             pageTitle: 'Property Details',
-            property: property
+            property: property,
+            isloggedin: req.isloggedin
         });
     });
 };
@@ -68,6 +72,6 @@ exports.deleteFavoriteProperty = (req, res, next) => {
         })
         .catch((err) => {
             console.error('Error deleting favourite:', err);
-            res.status(500).render('404', { pageTitle: 'Page Not Found' });
+            res.status(500).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin });
         });
 };

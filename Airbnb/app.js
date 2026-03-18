@@ -3,6 +3,7 @@ const dns = require('dns');
 const express = require('express');
 const storeRouter = require('./routes/storeRouter');
 const {hostRouter} = require('./routes/hostRouter');
+const { authRouter } = require('./routes/authRouter');
 const rootDir = require('./utils/pathutils');
 const errorController = require('./controller/error');
 const mongoose = require('mongoose');
@@ -13,7 +14,22 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(rootDir, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  if (typeof req.isloggedin === 'undefined') {
+    req.isloggedin = false;
+  }
+  res.locals.isloggedin = req.isloggedin;
+  next();
+});
+
 app.use(storeRouter);
+app.use(authRouter);
+app.use('/host', (req, res, next) => {
+    if (!req.isloggedin) {
+        return res.redirect('/login');
+    }
+    next();});
 app.use(hostRouter);
 
 // Serve static files

@@ -11,12 +11,18 @@
         <div class="text-white font-bold text-2xl">Airbnb</div>
         <ul class="flex space-x-4">
             <li><a href="/" class="text-white hover:text-gray-300">Home</a></li>
-            <li><a href="/host/add-property" class="text-white hover:text-gray-300">Add Property</a></li>
-            <li><a href="/contact-us" class="text-white hover:text-gray-300">Contact Us</a></li>
-            <li><a href="/bookings" class="text-white hover:text-gray-300">My Bookings</a></li>
-            <li><a href="/favourite-list" class="text-white hover:text-gray-300">My Favourites</a></li>
-            <li><a href="/host/hostHome-list" class="text-white hover:text-gray-300">Host Homes List</a></li>
+            <% if (isloggedin) { %>
+                <li><a href="/host/add-property" class="text-white hover:text-gray-300">Add Property</a></li>
+                <li><a href="/contact-us" class="text-white hover:text-gray-300">Contact Us</a></li>
+                <li><a href="/bookings" class="text-white hover:text-gray-300">My Bookings</a></li>
+                <li><a href="/favourite-list" class="text-white hover:text-gray-300">My Favourites</a></li>
+                <li><a href="/host/hostHome-list" class="text-white hover:text-gray-300">Host Homes List</a></li>
+            <% } %>
+
         </ul>
+        <div class="flex items-center space-x-4">
+            <a href="/login" class=" bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Login</a>
+        </div>
     </nav>
 </body>
 </html>
