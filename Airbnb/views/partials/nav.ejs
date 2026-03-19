@@ -20,9 +20,15 @@
             <% } %>
 
         </ul>
-        <div class="flex items-center space-x-4">
-            <a href="/login" class=" bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Login</a>
-        </div>
+            <% if (!isloggedin) { %>
+                <div class="flex items-center space-x-4">
+                    <a href="/login" class=" bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Login</a>
+                </div>
+            <% } else { %>
+                <form action="/logout" method="POST">
+                    <button type="submit" class="bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Logout</button>
+                </form>
+            <% } %>
     </nav>
 </body>
 </html>

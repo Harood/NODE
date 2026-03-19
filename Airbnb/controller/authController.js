@@ -3,6 +3,11 @@ exports.getLogin = (req, res) => {
 };
 
 exports.postLogin = (req, res) => {
-    req.isloggedin = true;
+    res.cookie('loggedin', true);
     res.redirect('/');
+};
+
+exports.postlogout = (req, res) => {
+    res.clearCookie('loggedin');
+    res.redirect('/login');
 };

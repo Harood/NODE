@@ -14,6 +14,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(rootDir, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  req.isloggedin = req.get('Cookie')?.split('=')[1] || false;
+  next();
+});
 
 app.use((req, res, next) => {
   if (typeof req.isloggedin === 'undefined') {
