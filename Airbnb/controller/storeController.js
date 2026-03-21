@@ -2,6 +2,7 @@ const Property = require('../models/property');
 const Favourite = require('../models/favourite');
 
 exports.getAllProperties = (req, res, next) => {
+    console.log("Session Data:", req.session);
     const properties = Property.find().then(registeredproperty => {
         res.render('store/home-list', {
             pageTitle: 'All Properties',

@@ -17,8 +17,10 @@
     "@tailwindcss/cli": "^4.1.18",
     "@tailwindcss/postcss": "^4.1.18",
     "body-parser": "^2.2.2",
+    "connect-mongodb-session": "^5.0.0",
     "ejs": "^4.0.1",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "mongodb": "^7.1.0",
     "mongoose": "^9.3.0",
     "mysql2": "^3.19.0"
