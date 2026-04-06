@@ -1,34 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="bg-red-400 p-4 flex justify-between items-center">
-        <div class="text-white font-bold text-2xl">Airbnb</div>
-        <ul class="flex space-x-4">
-            <li><a href="/" class="text-white hover:text-gray-300">Home</a></li>
-            <% if (isloggedin) { %>
-                <li><a href="/host/add-property" class="text-white hover:text-gray-300">Add Property</a></li>
-                <li><a href="/contact-us" class="text-white hover:text-gray-300">Contact Us</a></li>
-                <li><a href="/bookings" class="text-white hover:text-gray-300">My Bookings</a></li>
-                <li><a href="/favourite-list" class="text-white hover:text-gray-300">My Favourites</a></li>
-                <li><a href="/host/hostHome-list" class="text-white hover:text-gray-300">Host Homes List</a></li>
-            <% } %>
+<nav class="bg-red-400 p-4 flex justify-between items-center">
+    <div class="text-white font-bold text-2xl">Airbnb</div>
+    <ul class="flex space-x-4">
+        <li><a href="/" class="text-white hover:text-gray-300">Home</a></li>
+        <% if (isloggedin) { %>
+            <li><a href="/host/add-property" class="text-white hover:text-gray-300">Add Property</a></li>
+            <li><a href="/contact-us" class="text-white hover:text-gray-300">Contact Us</a></li>
+            <li><a href="/bookings" class="text-white hover:text-gray-300">My Bookings</a></li>
+            <li><a href="/favourite-list" class="text-white hover:text-gray-300">My Favourites</a></li>
+            <li><a href="/host/hostHome-list" class="text-white hover:text-gray-300">Host Homes List</a></li>
+        <% } %>
+    </ul>
 
-        </ul>
-            <% if (!isloggedin) { %>
-                <div class="flex items-center space-x-4">
-                    <a href="/login" class=" bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Login</a>
-                </div>
-            <% } else { %>
-                <form action="/logout" method="POST">
-                    <button type="submit" class="bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Logout</button>
-                </form>
-            <% } %>
-    </nav>
-</body>
-</html>
+    <% if (!isloggedin) { %>
+        <div class="flex items-center space-x-4">
+            <a href="/login" class="bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Login</a>
+            <a href="/signup" class="bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">SignUp</a>
+        </div>
+    <% } else { %>
+        <form action="/logout" method="POST">
+            <button type="submit" class="bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Logout</button>
+        </form>
+    <% } %>
+</nav>

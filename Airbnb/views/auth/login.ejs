@@ -1,23 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airbnb Login</title>
+<%- include('../partials/head', {pageTitle: 'Login'}) %>
 </head>
-<body>
-    <div>
-        <h1>Login to Airbnb</h1>
-        <form action="/login" method="POST">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+<body class="min-h-screen bg-slate-100">
+    <%- include('../partials/nav') %>
+    <main class="mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-6xl items-center justify-center px-4 py-8">
+        <div class="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+            <h1 class="text-2xl font-bold text-slate-800">Login to Airbnb</h1>
+            <p class="mt-1 text-sm text-slate-500">Welcome back. Enter your account details.</p>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <form action="/login" method="POST" class="mt-6 space-y-4">
+                <div>
+                    <label for="email" class="mb-1 block text-sm font-medium text-slate-700">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-800 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-200"
+                        placeholder="you@example.com"
+                    >
+                </div>
 
-            <button type="submit">Login</button>
-        </form>
-    </div>
-    
+                <div>
+                    <label for="password" class="mb-1 block text-sm font-medium text-slate-700">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-800 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-200"
+                        placeholder="Enter your password"
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-lg bg-rose-600 px-4 py-2 font-semibold text-white transition hover:bg-rose-700"
+                >
+                    SignIn
+                </button>
+            </form>
+        </div>
+    </main>
 </body>
 </html>
