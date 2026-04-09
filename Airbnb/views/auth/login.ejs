@@ -8,6 +8,7 @@
             <p class="mt-1 text-sm text-slate-500">Welcome back. Enter your account details.</p>
 
             <form action="/login" method="POST" class="mt-6 space-y-4">
+                <%- include('../partials/errors') %>
                 <div>
                     <label for="email" class="mb-1 block text-sm font-medium text-slate-700">Email</label>
                     <input
@@ -17,6 +18,7 @@
                         required
                         class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-800 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-200"
                         placeholder="you@example.com"
+                        value="<%= oldInput.email ? oldInput.email : '' %>"
                     >
                 </div>
 

@@ -1,12 +1,73 @@
-const { check } = require("express-validator");
+const { check, validationResult } = require("express-validator");
+const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
 exports.getLogin = (req, res) => {
-    res.render('auth/login', { pageTitle: 'Login', isloggedin: false });
+    res.render('auth/login', {
+        pageTitle: 'Login',
+        isloggedin: false,
+        errors: [],
+        oldInput: {
+            email: ''
+        }
+    });
 };
 
-exports.postLogin = (req, res) => {
-    req.session.isloggedin = true;
-    res.redirect('/');
+exports.postLogin = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email: email.trim().toLowerCase() });
+
+        if (!user) {
+            return res.status(422).render('auth/login', {
+                pageTitle: 'Login',
+                isloggedin: false,
+                errors: ['Invalid email or password'],
+                oldInput: { email }
+            });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(422).render('auth/login', {
+                pageTitle: 'Login',
+                isloggedin: false,
+                errors: ['Incorrect password'],
+                oldInput: { email }
+            });
+        }
+
+        req.session.isloggedin = true;
+        req.session.user = {
+            id: user._id.toString(),
+            email: user.email,
+            userType: user.userType
+        };
+
+        return req.session.save((saveError) => {
+            if (saveError) {
+                console.error('Error saving login session:', saveError);
+                return res.status(500).render('auth/login', {
+                    pageTitle: 'Login',
+                    isloggedin: false,
+                    errors: ['An error occurred while logging in. Please try again.'],
+                    oldInput: { email }
+                });
+            }
+
+            res.redirect('/');
+        });
+    } catch (error) {
+        console.error('Error during login:', error);
+        return res.status(500).render('auth/login', {
+            pageTitle: 'Login',
+            isloggedin: false,
+            errors: ['An error occurred while logging in. Please try again.'],
+            oldInput: { email }
+        });
+    }
 };
 
 exports.postlogout = (req, res) => {
@@ -16,7 +77,18 @@ exports.postlogout = (req, res) => {
 };
 
 exports.getSignup = (req, res) => {
-    res.render('auth/signup', { pageTitle: 'SignUp', isloggedin: false });
+    res.render('auth/signup', {
+        pageTitle: 'SignUp',
+        isloggedin: false,
+        errors: [],
+        oldInput: {
+            firstname: '',
+            lastname: '',
+            email: '',
+            password: '',
+            userType: 'guest'
+        }
+    });
 };
 
 exports.postSignup = [
@@ -40,10 +112,27 @@ exports.postSignup = [
             return res.status(422).render('auth/signup', { 
                 pageTitle: 'SignUp', 
                 isloggedin: false, 
-                errorMessage: errors.array()[0].msg,
+                errors: errors.array().map(err => err.msg),
                 oldInput: { firstname, lastname, email, password, userType }
              });
         }
-        res.redirect('/login');
+
+        bcrypt.hash(password, 12)
+            .then(hashedPassword => {
+                const newUser = new User({ firstname, lastname, email, password: hashedPassword, userType });
+                return newUser.save();
+            })
+            .then(() => {
+                console.log('User registered successfully');
+                res.redirect('/login');
+            }).catch(err => {
+                console.error('Error registering user:', err);
+                res.status(500).render('auth/signup', {
+                    pageTitle: 'SignUp',
+                    isloggedin: false,
+                    errors: ['An error occurred while registering. Please try again.'],
+                    oldInput: { firstname, lastname, email, password, userType }
+                });
+            });
     }
 ];
