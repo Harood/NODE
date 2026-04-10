@@ -2,7 +2,8 @@ const Property = require('../models/property');
 
 exports.getAddProperty = (req, res, next) => {
     
-    res.render('host/edit-property', { pageTitle: 'Add Property', edit: false, isloggedin: req.isloggedin });
+    res.render('host/edit-property', { pageTitle: 'Add Property', edit: false, isloggedin: req.isloggedin, user: req.session.user    });
+    
 }
 
 exports.getHostProperties = (req, res, next) => {
@@ -10,7 +11,8 @@ exports.getHostProperties = (req, res, next) => {
         res.render('host/hostHome-list', { 
             pageTitle: 'Host Homes List', 
             properties: registeredproperty,
-            isloggedin: req.isloggedin
+            isloggedin: req.isloggedin,
+            user: req.session.user
         });
     }
 );
@@ -24,10 +26,10 @@ exports.postAddProperty =  (req, res, next) => {
     const newProperty = new Property({houseName, location, price, photoUrl: imageUrl, rating, description});
     newProperty.save().then(() => {
         console.log('Property saved to database');
-        res.render('host/propertyadded', { pageTitle: 'Property Added Successfully', isloggedin: req.isloggedin });
+        res.render('host/propertyadded', { pageTitle: 'Property Added Successfully', isloggedin: req.isloggedin, user: req.session.user });
     }).catch((err) => {
         console.error('Error saving property:', err);
-        res.status(500).render('404', { pageTitle: 'Error adding property', isloggedin: req.isloggedin });
+        res.status(500).render('404', { pageTitle: 'Error adding property', isloggedin: req.isloggedin, user: req.session.user });
     });
 }
 
@@ -37,9 +39,9 @@ exports.getEditProperty = (req, res, next) => {
 
     Property.findById(propertyId).then(property=> {
         if (!property) {
-            return res.status(404).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin  });
+            return res.status(404).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin, user: req.session.user  });
         }
-        res.render('host/edit-property', { pageTitle: 'Edit Property', property: property, edit: edit, isloggedin: req.isloggedin });
+        res.render('host/edit-property', { pageTitle: 'Edit Property', property: property, edit: edit, isloggedin: req.isloggedin, user: req.session.user });
     });
 };
 exports.postEditProperty = (req, res, next) => {
@@ -48,7 +50,7 @@ exports.postEditProperty = (req, res, next) => {
     const imageUrl = photoUrl || image;
     Property.findById(propertyId).then(property => {
         if (!property) {
-            return res.status(404).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin });
+            return res.status(404).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin, user: req.session.user });
         }
         property.houseName = houseName;
         property.location = location;
@@ -61,7 +63,7 @@ exports.postEditProperty = (req, res, next) => {
         res.redirect('/host/hostHome-list');
     }).catch((err) => {
         console.error('Error updating property:', err);
-        res.status(500).render('404', { pageTitle: 'Error updating property', isloggedin: req.isloggedin });
+        res.status(500).render('404', { pageTitle: 'Error updating property', isloggedin: req.isloggedin, user: req.session.user });
     });
 };
 
@@ -72,7 +74,7 @@ exports.deleteProperty = (req, res, next) => {
         res.redirect('/host/hostHome-list');
     }).catch((err) => {
         console.error('Error deleting property:', err);
-        res.status(500).render('404', { pageTitle: 'Error deleting property', isloggedin: req.isloggedin });
+        res.status(500).render('404', { pageTitle: 'Error deleting property', isloggedin: req.isloggedin, user: req.session.user });
     });
     
 };

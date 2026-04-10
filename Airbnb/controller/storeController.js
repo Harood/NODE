@@ -1,5 +1,5 @@
 const Property = require('../models/property');
-const Favourite = require('../models/favourite');
+const User = require('../models/user');
 
 exports.getAllProperties = (req, res, next) => {
     console.log("Session Data:", req.session);
@@ -7,7 +7,8 @@ exports.getAllProperties = (req, res, next) => {
         res.render('store/home-list', {
             pageTitle: 'All Properties',
             properties: registeredproperty,
-            isloggedin: req.isloggedin
+            isloggedin: req.isloggedin,
+            user: req.session.user
         });
     });
 };
@@ -17,36 +18,56 @@ exports.getAllBookings = (req, res, next) => {
         res.render('store/bookings', { 
             pageTitle: 'My Bookings',
             properties: registeredproperty,
-            isloggedin: req.isloggedin
+            isloggedin: req.isloggedin,
+            user: req.session.user
         });
     });
 };  
 
 exports.getFavoriteProperties = (req, res, next) => {
-    Favourite.find().populate('propertyId').then(favorites => {
-        const favoriteProperties = favorites.map(fav => fav.propertyId);
+    const userId = req.session.user && (req.session.user._id || req.session.user.id);
+    if (!userId) {
+        return res.redirect('/login');
+    }
+
+    User.findById(userId).populate('favourites').then(user => {
+        if (!user) {
+            return res.status(404).render('404', { pageTitle: 'User Not Found', isloggedin: req.isloggedin, user: req.session.user });
+        }
+
         res.render('store/favourite-list', { 
             pageTitle: 'My Favourites', 
-            properties: favoriteProperties,
-            isloggedin: req.isloggedin
+            properties: user.favourites,
+            isloggedin: req.isloggedin,
+            user: req.session.user
         });
     });
 };
 
-exports.postaddFavoriteProperty = (req, res, next) => {
-    const propertyId = req.body.propertyId;
-    Favourite.findOneAndUpdate(
-        { propertyId },
-        { propertyId },
-        { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
-    )
-        .then(() => {
-            res.redirect('/favourite-list');
-        })
-        .catch((err) => {
-            console.error('Error adding to favourites:', err);
-            res.status(500).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin });
-        });
+exports.postaddFavoriteProperty = async (req, res, next) => {
+    try {
+        const propertyId = req.body.propertyId;
+        const userId = req.session.user && (req.session.user._id || req.session.user.id);
+
+        if (!userId || !propertyId) {
+            return res.redirect('/favourite-list');
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).render('404', { pageTitle: 'User Not Found', isloggedin: req.isloggedin, user: req.session.user });
+        }
+
+        if (!user.favourites.some((favId) => favId.toString() === propertyId.toString())) {
+            user.favourites.push(propertyId);
+            await user.save();
+        }
+
+        return res.redirect('/favourite-list');
+    } catch (err) {
+        console.error('Error adding to favourites:', err);
+        return res.status(500).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin, user: req.session.user });
+    }
 };
 
 exports.getPropertyDetails = (req, res, next) => {
@@ -54,25 +75,30 @@ exports.getPropertyDetails = (req, res, next) => {
 
     Property.findById(propertyId).then(property => {
         if (!property) {
-            return res.status(404).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin });
+            return res.status(404).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin, user: req.session.user });
         }
         res.render('store/home-detail', {
             pageTitle: 'Property Details',
             property: property,
-            isloggedin: req.isloggedin
+            isloggedin: req.isloggedin,
+            user: req.session.user
         });
     });
 };
 
-exports.deleteFavoriteProperty = (req, res, next) => {
-    const propertyId = req.params.propertyId;
+exports.deleteFavoriteProperty = async (req, res, next) => {
+    try {
+        const propertyId = req.params.propertyId;
+        const userId = req.session.user && (req.session.user._id || req.session.user.id);
 
-    Favourite.deleteOne({ propertyId })
-        .then(() => {
-            res.redirect('/favourite-list');
-        })
-        .catch((err) => {
-            console.error('Error deleting favourite:', err);
-            res.status(500).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin });
-        });
+        if (!userId || !propertyId) {
+            return res.redirect('/favourite-list');
+        }
+
+        await User.findByIdAndUpdate(userId, { $pull: { favourites: propertyId } });
+        return res.redirect('/favourite-list');
+    } catch (err) {
+        console.error('Error deleting favourite:', err);
+        return res.status(500).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin, user: req.session.user });
+    }
 };

@@ -1,24 +1,29 @@
-<nav class="bg-red-400 p-4 flex justify-between items-center">
-    <div class="text-white font-bold text-2xl">Airbnb</div>
-    <ul class="flex space-x-4">
-        <li><a href="/" class="text-white hover:text-gray-300">Home</a></li>
+<nav class="sticky top-0 z-50 border-b border-white/20 bg-gradient-to-r from-rose-600/90 via-rose-500/90 to-orange-500/90 px-4 py-3 shadow-lg backdrop-blur-md">
+    <div class="mx-auto flex w-full max-w-7xl flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div class="text-white font-black tracking-wide text-2xl">Airbnb</div>
+    <ul class="flex flex-wrap items-center gap-2 md:gap-4">
+        <li><a href="/" class="rounded-md px-3 py-2 text-white/95 transition-all duration-300 hover:bg-white/15 hover:text-white font-semibold">Home</a></li>
         <% if (isloggedin) { %>
-            <li><a href="/host/add-property" class="text-white hover:text-gray-300">Add Property</a></li>
-            <li><a href="/contact-us" class="text-white hover:text-gray-300">Contact Us</a></li>
-            <li><a href="/bookings" class="text-white hover:text-gray-300">My Bookings</a></li>
-            <li><a href="/favourite-list" class="text-white hover:text-gray-300">My Favourites</a></li>
-            <li><a href="/host/hostHome-list" class="text-white hover:text-gray-300">Host Homes List</a></li>
+            <% if (user.userType === 'host') { %>
+                <li><a href="/host/add-property" class="rounded-md px-3 py-2 text-white/95 font-semibold transition-all duration-300 hover:bg-white/15 hover:text-white">Add Property</a></li>
+                <li><a href="/host/hostHome-list" class="rounded-md px-3 py-2 text-white/95 font-semibold transition-all duration-300 hover:bg-white/15 hover:text-white">Host Homes List</a></li>
+            <% } else { %> 
+                <li><a href="/contact-us" class="rounded-md px-3 py-2 text-white/95 font-semibold transition-all duration-300 hover:bg-white/15 hover:text-white">Contact Us</a></li>
+                <li><a href="/bookings" class="rounded-md px-3 py-2 text-white/95  font-semibold transition-all duration-300 hover:bg-white/15 hover:text-white">My Bookings</a></li>
+                <li><a href="/favourite-list" class="rounded-md px-3 py-2 text-white/95 font-semibold transition-all duration-300 hover:bg-white/15 hover:text-white">My Favourites</a></li>
+            <% } %> 
         <% } %>
     </ul>
 
     <% if (!isloggedin) { %>
-        <div class="flex items-center space-x-4">
-            <a href="/login" class="bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Login</a>
-            <a href="/signup" class="bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">SignUp</a>
+        <div class="flex items-center gap-3">
+            <a href="/login" class="rounded-lg bg-white px-4 py-2 font-semibold text-rose-500 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-rose-50 hover:shadow-md">Login</a>
+            <a href="/signup" class="rounded-lg border border-white/60 bg-white/10 px-4 py-2 font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/20">Sign Up</a>
         </div>
     <% } else { %>
         <form action="/logout" method="POST">
-            <button type="submit" class="bg-white text-red-400 hover:bg-gray-300 py-2 px-4 rounded">Logout</button>
+            <button type="submit" class="rounded-lg bg-white px-4 py-2 font-semibold text-rose-500 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-rose-50 hover:shadow-md">Logout</button>
         </form>
     <% } %>
+    </div>
 </nav>

@@ -9,7 +9,8 @@ exports.getLogin = (req, res) => {
         errors: [],
         oldInput: {
             email: ''
-        }
+        },
+        user : {},
     });
 };
 
@@ -24,7 +25,8 @@ exports.postLogin = async (req, res) => {
                 pageTitle: 'Login',
                 isloggedin: false,
                 errors: ['Invalid email or password'],
-                oldInput: { email }
+                oldInput: { email },
+                user : {},
             });
         }
 
@@ -35,7 +37,8 @@ exports.postLogin = async (req, res) => {
                 pageTitle: 'Login',
                 isloggedin: false,
                 errors: ['Incorrect password'],
-                oldInput: { email }
+                oldInput: { email },
+                user : {},
             });
         }
 
@@ -53,7 +56,8 @@ exports.postLogin = async (req, res) => {
                     pageTitle: 'Login',
                     isloggedin: false,
                     errors: ['An error occurred while logging in. Please try again.'],
-                    oldInput: { email }
+                    oldInput: { email },
+                    user: {}
                 });
             }
 
@@ -65,7 +69,9 @@ exports.postLogin = async (req, res) => {
             pageTitle: 'Login',
             isloggedin: false,
             errors: ['An error occurred while logging in. Please try again.'],
-            oldInput: { email }
+            oldInput: { email },
+            user: {}
+
         });
     }
 };
@@ -87,7 +93,8 @@ exports.getSignup = (req, res) => {
             email: '',
             password: '',
             userType: 'guest'
-        }
+        },
+         user : {},
     });
 };
 
@@ -113,7 +120,8 @@ exports.postSignup = [
                 pageTitle: 'SignUp', 
                 isloggedin: false, 
                 errors: errors.array().map(err => err.msg),
-                oldInput: { firstname, lastname, email, password, userType }
+                oldInput: { firstname, lastname, email, password, userType },
+                user: {}
              });
         }
 
@@ -131,7 +139,8 @@ exports.postSignup = [
                     pageTitle: 'SignUp',
                     isloggedin: false,
                     errors: ['An error occurred while registering. Please try again.'],
-                    oldInput: { firstname, lastname, email, password, userType }
+                    oldInput: { firstname, lastname, email, password, userType },
+                    user: {}
                 });
             });
     }

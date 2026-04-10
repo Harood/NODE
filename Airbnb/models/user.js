@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
     lastname: { type: String, required: false },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    userType: { type: String, enum: ['host', 'guest'], default: 'guest' }
+    userType: { type: String, enum: ['host', 'guest'], default: 'guest' },
+    favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Property' }] 
 });
 
 module.exports = mongoose.model('User', userSchema);    
