@@ -21,9 +21,9 @@ exports.getHostProperties = (req, res, next) => {
 
 exports.postAddProperty =  (req, res, next) => {
     console.log('Property Registered:', req.body);
-    const { houseName, location, price, photoUrl, image, rating, description } = req.body;
-    const imageUrl = photoUrl || image;
-    const newProperty = new Property({houseName, location, price, photoUrl: imageUrl, rating, description});
+    const { houseName, location, price, photo, image, rating, description } = req.body;
+    const imageUrl = photo || image;
+    const newProperty = new Property({houseName, location, price, photo: imageUrl, rating, description});
     newProperty.save().then(() => {
         console.log('Property saved to database');
         res.render('host/propertyadded', { pageTitle: 'Property Added Successfully', isloggedin: req.isloggedin, user: req.session.user });
@@ -46,8 +46,8 @@ exports.getEditProperty = (req, res, next) => {
 };
 exports.postEditProperty = (req, res, next) => {
     const propertyId = req.params.id;
-    const { houseName, location, price, photoUrl, image, rating, description } = req.body;
-    const imageUrl = photoUrl || image;
+    const { houseName, location, price, photo, image, rating, description } = req.body;
+    const imageUrl = photo || image;
     Property.findById(propertyId).then(property => {
         if (!property) {
             return res.status(404).render('404', { pageTitle: 'Page Not Found', isloggedin: req.isloggedin, user: req.session.user });
@@ -55,7 +55,7 @@ exports.postEditProperty = (req, res, next) => {
         property.houseName = houseName;
         property.location = location;
         property.price = price;
-        property.photoUrl = imageUrl;
+        property.photo = imageUrl;
         property.rating = rating;
         property.description = description;
         return property.save();

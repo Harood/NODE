@@ -10,12 +10,32 @@ const errorController = require('./controller/error');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const mongodbStore = require('connect-mongodb-session')(session);
+const multer = require('multer');
 
 const app = express();
+
+const randomString = (length) => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+};
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {        
+      cb(null, randomString(10) + '-' + file.originalname);
+    }
+});
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(rootDir, 'views'));
 app.use(express.urlencoded({ extended: true }));
+app.use(multer({storage}).single('photo'));
 
 
 const PORT = 3000;

@@ -11,7 +11,7 @@
             <ul class="mt-16 space-y-6 gap-4 items-center justify-center flex flex-col">
                 <% properties.forEach(function(property) { %>
                     <li class="border rounded shadow mb-2 w-1/2 border-gray-300 pb-2">
-                        <img class="rounded object-cover" src="<%= property.photoUrl || property.image %>" alt="Property Image">
+                        <img class="rounded object-cover" src="<%= property.photo || property.image %>" alt="Property Image">
                         <div class="flex items-center justify-between mt-2">
                             <div>
                                 <h2 class="font-semibold text-xl pl-2"><%= property.title %></h2>
